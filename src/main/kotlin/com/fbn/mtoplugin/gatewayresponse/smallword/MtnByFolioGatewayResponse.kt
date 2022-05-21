@@ -1,0 +1,30 @@
+package com.fbn.mtoplugin.gatewayresponse.smallword
+
+data class MtnByFolioGatewayResponse(
+    var agentCode: Int?,
+    var agentName: String?,
+    var amountOwed: Any?,
+    var beneficiary: Beneficiary?,
+    var creationDate: String?,
+    var deliveryFee: Double?,
+    var deliveryMethod: String?,
+    var fixedFee: Double?,
+    var folioNumber: Long?,
+    var mtn: Long?,
+    var payerLocationCode: String?,
+    var payerMtn: Long?,
+    var payoutCountry: String?,
+    var payoutCurrency: String?,
+    var payoutPrincipal: Double?,
+    var pinNumber: Any?,
+    var rate: String?,
+    var responseCode: String?,
+    var responseMessage: String?,
+    var sender: Sender?,
+    var sendingCountry: String?,
+    var serviceMessage: String?,
+    var settlementAmount: Double?,
+    var settlementCurrency: String?,
+    var totalSale: Double?,
+    var variableFee: Double?
+)
