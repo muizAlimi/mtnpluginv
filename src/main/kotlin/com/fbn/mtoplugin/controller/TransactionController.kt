@@ -1,6 +1,7 @@
 package com.fbn.mtoplugin.controller
 
 import com.fbn.mtoplugin.integrations.firstapple.FirstAppleService
+import com.fbn.mtoplugin.integrations.flutterwave.FlutterWaveService
 import com.fbn.mtoplugin.integrations.idtps.IDTPSService
 import com.fbn.mtoplugin.request.*
 import com.fbn.mtoplugin.integrations.sendwave.SendWaveTransactionServices
@@ -20,7 +21,8 @@ class TransactionController(private val sendWaveTransactionServices: SendWaveTra
                             private  val firstAppleService: FirstAppleService,
                             private val thunesService: ThunesService,
                             private  val idtpsService: IDTPSService,
-                            private val simbaServices: SimbaPayServices
+                            private val simbaServices: SimbaPayServices,
+                            private val flutterService: FlutterWaveService
 ) {
 
 
@@ -34,6 +36,7 @@ class TransactionController(private val sendWaveTransactionServices: SendWaveTra
             "mt0297" -> idtpsService.getCashPickUp(pickupRequest.TransactionReference!!)
             "thu" -> thunesService.getTransactionDetails(pickupRequest.TransactionReference!!)
             "simb" -> simbaServices.getTransaction(pickupRequest.TransactionReference!!)
+            "flwv" -> flutterService.getTransaction(pickupRequest.TransactionReference!!)
             else -> throw IllegalStateException("MTO NOT FOUND")
         }
         return ResponseEntity(trans, HttpStatus.OK)

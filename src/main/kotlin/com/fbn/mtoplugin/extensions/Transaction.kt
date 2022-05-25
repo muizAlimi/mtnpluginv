@@ -140,13 +140,13 @@ fun GetTransactionResponse.toTransaction(mtoCode : String) : PickupResponse{
 
 fun SimbaTransactionResponse.toTransaction(mtoCode : String): PickupResponse{
     val responseCode = if((resultModel?.status).toString() == "OK") "00" else resultModel?.status.toString()
-    val responseMessage = resultModel?.error ?: "no response from server"
+    val responseMessage = resultModel?.error ?: "Response is good, proceed as expected"
     if(responseCode == "00"){
-        val transaction = resultModel?.transaction?.sendAmount
+        val transaction = resultModel?.transaction?.receiveAmount
     }
     return PickupResponse().apply {
         ResponseCode = responseCode; ResponseMessage = responseMessage.toString();
-        TransactionAmount = resultModel?.transaction?.sendAmount.toString()
+        TransactionAmount = resultModel?.transaction?.receiveAmount.toString()
         TransactionReceiverFirstName = resultModel?.recipient?.name;
         TransactionReceiverLastName = resultModel?.recipient?.name;
         TransactionReference = resultModel?.transaction?.transRef;
