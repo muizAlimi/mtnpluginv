@@ -2,16 +2,20 @@ package com.fbn.mtoplugin.controller
 
 import com.fbn.mtoplugin.integrations.firstapple.FirstAppleService
 import com.fbn.mtoplugin.integrations.flutterwave.FlutterWaveService
+import com.fbn.mtoplugin.integrations.funtech.FunTechService
 import com.fbn.mtoplugin.integrations.idtps.IDTPSService
 import com.fbn.mtoplugin.request.*
 import com.fbn.mtoplugin.integrations.sendwave.SendWaveTransactionServices
 import com.fbn.mtoplugin.integrations.simbapay.SimbaPayServices
 import com.fbn.mtoplugin.integrations.smallworld.SmallWorldServices
 import com.fbn.mtoplugin.integrations.thunes.ThunesService
+import com.google.common.io.CharStreams
+import com.google.gson.Gson
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 @RestController
@@ -22,7 +26,8 @@ class TransactionController(private val sendWaveTransactionServices: SendWaveTra
                             private val thunesService: ThunesService,
                             private  val idtpsService: IDTPSService,
                             private val simbaServices: SimbaPayServices,
-                            private val flutterService: FlutterWaveService
+                            private val flutterService: FlutterWaveService,
+                            private val funtechService: FunTechService
 ) {
 
 
@@ -37,19 +42,23 @@ class TransactionController(private val sendWaveTransactionServices: SendWaveTra
             "thu" -> thunesService.getTransactionDetails(pickupRequest.TransactionReference!!)
             "simb" -> simbaServices.getTransaction(pickupRequest.TransactionReference!!)
             "flwv" -> flutterService.getTransaction(pickupRequest.TransactionReference!!)
+            "funtech" -> funtechService.getTransaction(pickupRequest.TransactionReference!!)
             else -> throw IllegalStateException("MTO NOT FOUND")
         }
         return ResponseEntity(trans, HttpStatus.OK)
     }
 
     @PostMapping("/confirm-payment")
-    fun payTransaction(@Valid @RequestBody payTransRequest: PayTransRequest, errors : Errors) : ResponseEntity<*>{
+    fun payTransaction(@Valid @RequestBody payTransRequest: PayTransRequest, httpServletRequest: HttpServletRequest, errors : Errors) : ResponseEntity<*>{
         if (errors.hasErrors()) throw IllegalStateException(errors.allErrors.map { it.defaultMessage }.joinToString("; "))
         val trans = when(payTransRequest.transactionMtoCode?.lowercase()){
             "mt0293" -> smallWorldServices.payoutAnywhere(payTransRequest)
             "fapple" -> firstAppleService.payTransaction(payTransRequest)
             "mt0297" -> idtpsService.markTransactionAsPaid(payTransRequest)
             "thu" -> thunesService.completeCollection(payTransRequest)
+            "simb" -> simbaServices.confirmTransactionComplete(payTransRequest)
+            "flwv" -> flutterService.markTransactionComplete(payTransRequest)
+            "funtech" -> funtechService.markTransactionComplete(payTransRequest)
             else -> throw IllegalStateException("MTO NOT FOUND")
         }
         return ResponseEntity(trans, HttpStatus.OK)

@@ -44,6 +44,19 @@ class ConfigUtil {
     @Value("\${flutterwave.dev.baseurl}")
     private val FLUTTER_WAVE_BASEURL_DEV : String? = null
 
+    @Value("\${funtech.dev.accesshashdata}")
+    private val FUN_TECH_ACCESSHASHDATA_DEV : String? = null
+    @Value("\${funtech.dev.accessusername}")
+    private val FUN_TECH_ACCESSUSERNAME_DEV : String? = null
+    @Value("\${funtech.dev.accesspassword}")
+    private val FUN_TECH_ACCESSPASSWORD_DEV : String? = null
+    @Value("\${funtech.dev.accessservicenumber}")
+    private val FUN_TECH_ACCESSSERVICENUMBER_DEV : String? = null
+    @Value("\${funtech.dev.accessaffiliatenumber}")
+    private val FUN_TECH_ACCESSAFFILIATENUMBER_DEV : String? = null
+    @Value("\${funtech.dev.baseurl}")
+    private val FUN_TECH_BASEURL_DEV : String? = null
+
 
     @Value("\${fapple.prod.key}")
     private val FIRST_APPLE_KEY_PROD : String? = null
@@ -76,12 +89,25 @@ class ConfigUtil {
     @Value("\${simbapay.prod.baseurl}")
     private val SIMBA_PAY_BASEURL_PROD : String? = null
 
-    @Value("\${flutterwave.dev.clientsecret}")
+    @Value("\${flutterwave.prod.clientsecret}")
     private val FLUTTER_WAVE_CLIENTSECRET_PROD : String? = null
-    @Value("\${flutterwave.dev.clientid}")
+    @Value("\${flutterwave.prod.clientid}")
     private val FLUTTER_WAVE_CLIENTID_PROD : String? = null
-    @Value("\${flutterwave.dev.baseurl}")
+    @Value("\${flutterwave.prod.baseurl}")
     private val FLUTTER_WAVE_BASEURL_PROD : String? = null
+
+    @Value("\${funtech.prod.accesshashdata}")
+    private val FUN_TECH_ACCESSHASHDATA_PROD : String? = null
+    @Value("\${funtech.prod.accessusername}")
+    private val FUN_TECH_ACCESSUSERNAME_PROD : String? = null
+    @Value("\${funtech.prod.accesspassword}")
+    private val FUN_TECH_ACCESSPASSWORD_PROD : String? = null
+    @Value("\${funtech.prod.accessservicenumber}")
+    private val FUN_TECH_ACCESSSERVICENUMBER_PROD : String? = null
+    @Value("\${funtech.prod.accessaffiliatenumber}")
+    private val FUN_TECH_ACCESSAFFILIATENUMBER_PROD : String? = null
+    @Value("\${funtech.prod.baseurl}")
+    private val FUN_TECH_BASEURL_PROD : String? = null
 
 
     @Value("\${mto.stage}")
@@ -127,6 +153,16 @@ class ConfigUtil {
                     "baseurl" to FLUTTER_WAVE_BASEURL_DEV!!,
                 )
             }
+            mto == "funtech" && stage == "dev" -> {
+                hashMapOf(
+                    "accesshashdata" to FUN_TECH_ACCESSHASHDATA_DEV!!,
+                    "accessusername" to FUN_TECH_ACCESSUSERNAME_DEV!!,
+                    "accesspassword" to FUN_TECH_ACCESSPASSWORD_DEV!!,
+                    "accessservicenumber" to FUN_TECH_ACCESSSERVICENUMBER_DEV!!,
+                    "accessaffiliatenumber" to FUN_TECH_ACCESSAFFILIATENUMBER_DEV!!,
+                    "baseurl" to FUN_TECH_BASEURL_DEV!!,
+                )
+            }
             mto == "idtps" && stage == "prod" -> {
                 hashMapOf(
                     "payerscode" to IDTPS_PAYERS_CODE_PROD!!,
@@ -161,6 +197,16 @@ class ConfigUtil {
                     "clientsecret" to FLUTTER_WAVE_CLIENTSECRET_PROD!!,
                     "clientid" to FLUTTER_WAVE_CLIENTID_PROD!!,
                     "baseurl" to FLUTTER_WAVE_BASEURL_PROD!!,
+                )
+            }
+            mto == "funtech" && stage == "prod" -> {
+                hashMapOf(
+                    "accesshashdata" to FUN_TECH_ACCESSHASHDATA_PROD!!,
+                    "accessusername" to FUN_TECH_ACCESSUSERNAME_PROD!!,
+                    "accesspassword" to FUN_TECH_ACCESSPASSWORD_PROD!!,
+                    "accessservicenumber" to FUN_TECH_ACCESSSERVICENUMBER_PROD!!,
+                    "accessaffiliatenumber" to FUN_TECH_ACCESSAFFILIATENUMBER_PROD!!,
+                    "baseurl" to FUN_TECH_BASEURL_PROD!!,
                 )
             }
             else -> throw IllegalStateException("mto and stage not found")

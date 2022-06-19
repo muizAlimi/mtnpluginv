@@ -29,6 +29,7 @@ data class PayTransRequest(
     var transactionReceiverNationality: String?,
     var transactionReceiverPhoneNumber: String?,
     var transactionReceiverStreet: String?,
+    var transactionReceiverBirthDate: String?,
     var transactionReference: String?,
     var transactionPayoutRemark: String?,
     var transactionResponse: String?,
@@ -61,5 +62,10 @@ data class PayTransRequest(
     var responseCode: String? = null,
     var responseMessage: String? = null,
     var transactionInternalId: String? = null,
-    var transactionReservationId: String? = null
+    var transactionReservationId: String? = null,
+    var transactionExtraData: String?,
+    var transactionReceiverIDDocumentNumber: String?,
+    var transactionReceiverIDDocumentTypeCode: String?,
+    var transactionReceiverIDDocumentExpirationDate: String?,
+    var transactionReceiverIDDocumentDeliveryDate: String?
     )

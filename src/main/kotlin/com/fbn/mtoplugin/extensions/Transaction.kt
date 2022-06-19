@@ -15,6 +15,8 @@ import com.fbn.mtoplugin.response.firstapple.PayTransactionErrorResponse
 import com.fbn.mtoplugin.response.firstapple.PayTransactionResponse
 import com.fbn.mtoplugin.response.flutterwave.FlutterWavePaymentResponse
 import com.fbn.mtoplugin.response.flutterwave.FlutterWaveResponsePickUp
+import com.fbn.mtoplugin.response.funtech.FuntechPaymentResponse
+import com.fbn.mtoplugin.response.funtech.FuntechResponsePickUp
 import com.fbn.mtoplugin.response.idtps.LookupResponse
 import com.fbn.mtoplugin.response.idtps.PaymentResponse
 import com.fbn.mtoplugin.response.idtps.ReleaseResponse
@@ -65,24 +67,50 @@ fun SendWaveResponsePickUp.toTransaction(mtoCode : String): PickupResponse{
     }
 }
 
-fun FlutterWaveResponsePickUp.toTransaction(mtoCode : String): PickupResponse{
+fun FlutterWaveResponsePickUp.toTransaction(mtoCode : String): PickupResponse {
     return PickupResponse().apply {
         ResponseCode = responseCode; ResponseMessage = responseDesc;
-        TransactionAmount = finance?.receiveAmount.toString();
-        TransactionReceiverFirstName = beneficiary?.firstName; TransactionReceiverPhoneNumber = beneficiary?.phoneNo;
-        TransactionReceiverLastName = beneficiary?.lastName; TransactionReceiverAddress = beneficiary?.address1;
-        TransactionReceiverCity = beneficiary?.state; TransactionReceiverNationality = beneficiary?.country;
-        TransactionSenderFirstName = sender?.firstName; TransactionSenderLastName = beneficiary?.lastName;
-        TransactionSenderPhoneNumber = sender?.phoneNo; TransactionSenderStreetAddress = sender?.address1;
-        TransactionSenderCityAddress = sender?.state; TransactionSenderNationality = sender?.country;
-        TransactionStatus = status; TransactionReference = transactionRef;
-        TransactionSourceCountryCurrency = finance?.sendCurrency; TransactionDestinationCountryCurrency = finance?.receiveCurrency;
-        TransactionMtoCode = mtoCode; TransactionCurrency = finance?.receiveCurrency ?: "USD"
-        TransactionDestinationCountryCurrency = finance?.receiveCurrency ?: "USD"; TransactionSourceCountryCurrency = finance?.sendCurrency ?: "USD"
-
+        TransactionAmount = finance?.sendAmount.toString();
+        TransactionReceiverFirstName = beneficiary?.firstName;
+        TransactionReceiverPhoneNumber = beneficiary?.phoneNo;
+        TransactionReceiverLastName = beneficiary?.lastName;
+        TransactionReceiverAddress = beneficiary?.address1;
+        TransactionReceiverCity = beneficiary?.state;
+        TransactionReceiverNationality = beneficiary?.country;
+        TransactionSenderFirstName = sender?.firstName;
+        TransactionSenderLastName = beneficiary?.lastName;
+        TransactionSenderPhoneNumber = sender?.phoneNo;
+        TransactionSenderStreetAddress = sender?.address1;
+        TransactionSenderCityAddress = sender?.state;
+        TransactionSenderNationality = sender?.country;
+        TransactionStatus = status;
+        TransactionReference = transactionRef;
+        TransactionSourceCountryCurrency = finance?.sendCurrency;
+        TransactionDestinationCountryCurrency = finance?.receiveCurrency;
+        TransactionMtoCode = mtoCode;
+        TransactionCurrency = finance?.receiveCurrency ?: "USD"
+        TransactionDestinationCountryCurrency = finance?.receiveCurrency ?: "USD";
+        TransactionSourceCountryCurrency = finance?.sendCurrency ?: "USD"
 
     }
 }
+    fun FuntechResponsePickUp.toTransaction(mtoCode : String): PickupResponse{
+        return PickupResponse().apply {
+            ResponseCode = ResponseCode; ResponseMessage = ResponseMessage;
+            TransactionAmount = PayoutPrincipal.toString();
+            TransactionReceiverFirstName = RecipientFirstName;
+            TransactionReceiverPhoneNumber = RecipientMobileNumber;
+            TransactionReceiverLastName = RecipientLastName;
+            TransactionReceiverCity = RecipientCity;
+            TransactionSenderFirstName = SenderFirstName;
+            TransactionSenderLastName = SenderLastName;
+            TransactionStatus = Status;
+            TransactionReference = transactionReference;
+            TransactionDestinationCountryCurrency = PayoutCurrency;
+            TransactionMtoCode = mtoCode;
+            TransactionCurrency = PayoutCurrency ?: "USD"
+        }
+   }
 
 
 fun ThunesTransaction.toTransaction(mtoCode : String): PickupResponse{
@@ -139,23 +167,41 @@ fun GetTransactionResponse.toTransaction(mtoCode : String) : PickupResponse{
 }
 
 fun SimbaTransactionResponse.toTransaction(mtoCode : String): PickupResponse{
-    val responseCode = if((resultModel?.status).toString() == "OK") "00" else resultModel?.status.toString()
-    val responseMessage = resultModel?.error ?: "Response is good, proceed as expected"
+    var responseCode = if((resultModel?.status).toString() == "OK") "00" else resultModel?.status.toString()
+    var responseMessage = resultModel?.error ?: "Response is good, proceed as expected"
+    var recipientFirstName = ""
+    var recipientLastName = ""
+    var senderFirstName = ""
+    var senderLastName = ""
     if(responseCode == "00"){
         val transaction = resultModel?.transaction?.receiveAmount
+        val recipientName = (resultModel?.recipient?.name).toString()
+        var partrecipient = recipientName.split(" ").toMutableList()
+        recipientFirstName = partrecipient.firstOrNull().toString()
+        partrecipient.removeAt(0)
+        recipientLastName = partrecipient.joinToString(" ")
+        val senderName = (resultModel?.sender?.name).toString()
+        var partsender = senderName.split(" ").toMutableList()
+        senderFirstName = partsender.firstOrNull().toString()
+        partsender.removeAt(0)
+        senderLastName = partsender.joinToString(" ")
+    }
+    if((resultModel?.transaction?.status).toString() != "READY"){
+        responseCode = "99"
+        responseMessage = (resultModel?.transaction?.status).toString()
     }
     return PickupResponse().apply {
         ResponseCode = responseCode; ResponseMessage = responseMessage.toString();
         TransactionAmount = resultModel?.transaction?.receiveAmount.toString()
-        TransactionReceiverFirstName = resultModel?.recipient?.name;
-        TransactionReceiverLastName = resultModel?.recipient?.name;
+        TransactionReceiverFirstName = recipientFirstName;
+        TransactionReceiverLastName = recipientLastName;
         TransactionReference = resultModel?.transaction?.transRef;
-        TransactionSenderFirstName = resultModel?.sender?.name;
-        TransactionSenderLastName = resultModel?.sender?.name;
+        TransactionSenderFirstName = senderFirstName;
+        TransactionSenderLastName = senderLastName;
         TransactionStatus = resultModel?.transaction?.status;
         TransactionSenderCityAddress = resultModel?.sender?.address1;
         TransactionDestinationCountryCurrency= resultModel?.transaction?.receiveCurrency ?: "USD"
-        TransactionCurrency = resultModel?.transaction?.sendCurrency ?: "USD";
+        TransactionCurrency = resultModel?.transaction?.receiveCurrency ?: "USD";
         TransactionMtoCode = mtoCode;
         TransactionSenderNationality = resultModel?.sender?.country
         TransactionReceiverNationality = resultModel?.recipient?.country;
@@ -208,6 +254,10 @@ fun SendWaveResponsePickUp.toPayResponse() : BaseResponse{
 
 fun FlutterWavePaymentResponse.toPayResponse() : BaseResponse{
     return BaseResponse(responseCode, responseDesc)
+}
+
+fun FuntechPaymentResponse.toPayResponse() : BaseResponse{
+    return BaseResponse(responseCode, responseMessage)
 }
 
 fun PayTransactionResponse.toPayResponse() : BaseResponse{

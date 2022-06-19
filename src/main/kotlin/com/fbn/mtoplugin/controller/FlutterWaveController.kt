@@ -1,10 +1,7 @@
 package com.fbn.mtoplugin.controller
 
 import com.fbn.mtoplugin.integrations.flutterwave.FlutterWaveService
-import com.fbn.mtoplugin.request.GetTransExportByFolio
-import com.fbn.mtoplugin.request.HoldPickupRequest
-import com.fbn.mtoplugin.request.SimbaPayCompletePickupRequest
-import com.fbn.mtoplugin.request.SimbaPayPickupRequest
+import com.fbn.mtoplugin.request.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.Errors
@@ -16,23 +13,29 @@ import javax.validation.Valid
 class FlutterWaveController(private val flutterWaveService: FlutterWaveService) {
 
     @PostMapping("/completeTransaction")
-    fun completeTransactionPickUp(@Valid @RequestBody request: SimbaPayCompletePickupRequest, errors : Errors) : ResponseEntity<*>{
+    fun completeTransactionPickUp(@Valid @RequestBody request: FlutterWaveCompletePickupRequest, errors : Errors) : ResponseEntity<*>{
         if (errors.hasErrors()) throw IllegalStateException(errors.allErrors.map { it.defaultMessage }.joinToString("; "))
-        val response = flutterWaveService.markTransactionComplete(request)
+        val response = flutterWaveService.TransactionComplete(request)
         return ResponseEntity(response, HttpStatus.OK)
     }
 
     @PostMapping("/gettransaction")
-    fun getTransactionsDetail(@Valid @RequestBody request: SimbaPayPickupRequest, errors : Errors) : ResponseEntity<*> {
+    fun getTransactionsDetail(@Valid @RequestBody request: FlutterWavePickupRequest, errors : Errors) : ResponseEntity<*> {
         if (errors.hasErrors()) throw IllegalStateException(errors.allErrors.map { it.defaultMessage }.joinToString("; "))
         val response = flutterWaveService.getTransaction(request.transactionReference)
         return ResponseEntity(response, HttpStatus.OK)
     }
 
-    @PutMapping("/locktransaction")
-    fun lockTransactionPickUp(@Valid @RequestBody request: HoldPickupRequest, errors : Errors) : ResponseEntity<*>{
+    @GetMapping("/query/transaction")
+    fun queryTransactionPickUp(@PathVariable request: String) : ResponseEntity<*>{
+        val response = flutterWaveService.paymentQuery(request)
+        return ResponseEntity(response, HttpStatus.OK)
+    }
+
+    @PostMapping("/transaction/otp")
+    fun postTransactionsOTP(@Valid @RequestBody request: FlutterWavePickupRequest, errors : Errors) : ResponseEntity<*> {
         if (errors.hasErrors()) throw IllegalStateException(errors.allErrors.map { it.defaultMessage }.joinToString("; "))
-        val response = flutterWaveService.lockTransaction(request)
+        val response = flutterWaveService.generateOTP(request.transactionReference)
         return ResponseEntity(response, HttpStatus.OK)
     }
 }

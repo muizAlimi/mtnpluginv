@@ -302,11 +302,117 @@ class ApiCallerImpl : ApiCaller {
     }
 
     override fun getFlutterwaveCall(uri: String, token: HashMap<String, String>, request: String): String? {
-        TODO("Not yet implemented")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        headers[token["firsthead"]!!] = token["firstheadkey"]
+        val entity = HttpEntity<Any>(request, headers)
+        println("uri: $uri")
+        println("request: $request")
+        headers.forEach {
+            println("${it.key}: ${it.value}")
+        }
+        logger.info("headers: $headers")
+        return try {
+            val resp = this.restTemplate.exchange(uri, HttpMethod.POST, entity, String::class.java)
+            println("response: $resp")
+            println(resp.body)
+            resp.body
+        } catch (err: HttpClientErrorException) {
+            println("clienterrorresponse: ${err.responseBodyAsString}")
+            Gson().toJson(BaseResponse("55", err.responseBodyAsString))
+        } catch (err: HttpServerErrorException){
+            println("servererrorresponse: ${err.responseBodyAsString}")
+            println(err.responseBodyAsString)
+            val resp = Gson().toJson(BaseResponse("50", err.responseBodyAsString))
+            println("response: $resp")
+            return resp
+        }
     }
 
     override fun postFlutterwaveCall(uri: String, token: HashMap<String, String>, request: String): String? {
-        TODO("Not yet implemented")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        headers[token["firsthead"]!!] = token["firstheadkey"]
+        val entity = HttpEntity<Any>(request, headers)
+        println("uri: $uri")
+        println("request: $request")
+        headers.forEach {
+            println("${it.key}: ${it.value}")
+        }
+        logger.info("headers: $headers")
+        return try {
+            val resp = this.restTemplate.exchange(uri, HttpMethod.POST, entity, String::class.java)
+            println("response: $resp")
+            println(resp.body)
+            resp.body
+        } catch (err: HttpClientErrorException) {
+            println("clienterrorresponse: ${err.responseBodyAsString}")
+            Gson().toJson(BaseResponse("55", err.responseBodyAsString))
+        } catch (err: HttpServerErrorException){
+            println("servererrorresponse: ${err.responseBodyAsString}")
+            println(err.responseBodyAsString)
+            val resp = Gson().toJson(BaseResponse("50", err.responseBodyAsString))
+            println("response: $resp")
+            return resp
+        }
+    }
+
+    override fun getFlutterwaveQueryCall(uri: String, token: HashMap<String, String>): String? {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        headers[token["firsthead"]!!] = token["firstheadkey"]
+        val entity = HttpEntity<Any>(headers)
+        println("uri: $uri")
+        headers.forEach {
+            println("${it.key}: ${it.value}")
+        }
+        logger.info("headers: $headers")
+        return try {
+            val resp = this.restTemplate.exchange(uri, HttpMethod.GET, entity, String::class.java)
+            println("response: $resp")
+            println(resp.body)
+            resp.body
+        } catch (err: HttpClientErrorException) {
+            println("clienterrorresponse: ${err.responseBodyAsString}")
+            Gson().toJson(BaseResponse("55", err.responseBodyAsString))
+        } catch (err: HttpServerErrorException){
+            println("servererrorresponse: ${err.responseBodyAsString}")
+            println(err.responseBodyAsString)
+            val resp = Gson().toJson(BaseResponse("50", err.responseBodyAsString))
+            println("response: $resp")
+            return resp
+        }
+    }
+
+    override fun postFuntechTransactionCall(uri: String, request: String): String? {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        val entity = HttpEntity<Any>(request, headers)
+        println("uri: $uri")
+        println("request: $request")
+        headers.forEach {
+            println("${it.key}: ${it.value}")
+        }
+        logger.info("headers: $headers")
+        return try {
+            val resp = this.restTemplate.exchange(uri, HttpMethod.POST, entity, String::class.java)
+            println("response: $resp")
+            println(resp.body)
+            resp.body
+        } catch (err: HttpClientErrorException) {
+            println("clienterrorresponse: ${err.responseBodyAsString}")
+            Gson().toJson(BaseResponse("55", err.responseBodyAsString))
+        } catch (err: HttpServerErrorException){
+            println("servererrorresponse: ${err.responseBodyAsString}")
+            println(err.responseBodyAsString)
+            val resp = Gson().toJson(BaseResponse("50", err.responseBodyAsString))
+            println("response: $resp")
+            return resp
+        }
     }
 
     override fun postStringCall(uri: String, body : String?, username: String, password: String?, params: Map<String, String>): String? {

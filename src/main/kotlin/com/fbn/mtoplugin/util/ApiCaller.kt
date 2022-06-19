@@ -33,4 +33,6 @@ interface ApiCaller {
 
     fun getFlutterwaveQueryCall(uri: String, token: HashMap<String, String>): String?
 
+    fun postFuntechTransactionCall(uri: String, request: String): String?
+
 }
