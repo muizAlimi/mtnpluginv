@@ -69,28 +69,35 @@ fun SendWaveResponsePickUp.toTransaction(mtoCode : String): PickupResponse{
 
 fun FlutterWaveResponsePickUp.toTransaction(mtoCode : String): PickupResponse {
     return PickupResponse().apply {
-        ResponseCode = responseCode; ResponseMessage = responseDesc;
-        TransactionAmount = finance?.sendAmount.toString();
-        TransactionReceiverFirstName = beneficiary?.firstName;
-        TransactionReceiverPhoneNumber = beneficiary?.phoneNo;
-        TransactionReceiverLastName = beneficiary?.lastName;
-        TransactionReceiverAddress = beneficiary?.address1;
-        TransactionReceiverCity = beneficiary?.state;
-        TransactionReceiverNationality = beneficiary?.country;
-        TransactionSenderFirstName = sender?.firstName;
-        TransactionSenderLastName = beneficiary?.lastName;
-        TransactionSenderPhoneNumber = sender?.phoneNo;
-        TransactionSenderStreetAddress = sender?.address1;
-        TransactionSenderCityAddress = sender?.state;
-        TransactionSenderNationality = sender?.country;
-        TransactionStatus = status;
-        TransactionReference = transactionRef;
-        TransactionSourceCountryCurrency = finance?.sendCurrency;
-        TransactionDestinationCountryCurrency = finance?.receiveCurrency;
-        TransactionMtoCode = mtoCode;
-        TransactionCurrency = finance?.receiveCurrency ?: "USD"
-        TransactionDestinationCountryCurrency = finance?.receiveCurrency ?: "USD";
-        TransactionSourceCountryCurrency = finance?.sendCurrency ?: "USD"
+        if(responseCode == "00") {
+            ResponseCode = responseCode; ResponseMessage = responseDesc;
+            TransactionAmount = finance?.sendAmount.toString();
+            TransactionReceiverFirstName = beneficiary?.firstName;
+            TransactionReceiverPhoneNumber = beneficiary?.phoneNo;
+            TransactionReceiverLastName = beneficiary?.lastName;
+            TransactionReceiverAddress = beneficiary?.address1;
+            TransactionReceiverCity = beneficiary?.state;
+            TransactionReceiverNationality = beneficiary?.country;
+            TransactionSenderFirstName = sender?.firstName;
+            TransactionSenderLastName = beneficiary?.lastName;
+            TransactionSenderPhoneNumber = sender?.phoneNo;
+            TransactionSenderStreetAddress = sender?.address1;
+            TransactionSenderCityAddress = sender?.state;
+            TransactionSenderNationality = sender?.country;
+            TransactionStatus = status;
+            TransactionReference = transactionRef;
+            TransactionSourceCountryCurrency = finance?.sendCurrency;
+            TransactionDestinationCountryCurrency = finance?.receiveCurrency;
+            TransactionMtoCode = mtoCode;
+            TransactionCurrency = finance?.receiveCurrency ?: "USD"
+            TransactionDestinationCountryCurrency = finance?.receiveCurrency ?: "USD";
+            TransactionSourceCountryCurrency = finance?.sendCurrency ?: "USD";
+        }else{
+            ResponseCode = responseCode;
+            ResponseMessage = responseDesc;
+            TransactionStatus = "PROCESSED";
+
+        }
 
     }
 }
@@ -188,7 +195,7 @@ fun SimbaTransactionResponse.toTransaction(mtoCode : String): PickupResponse{
     }
     if((resultModel?.transaction?.status).toString() != "READY"){
         responseCode = "99"
-        responseMessage = (resultModel?.transaction?.status).toString()
+        responseMessage = (resultModel?.error).toString()
     }
     return PickupResponse().apply {
         ResponseCode = responseCode; ResponseMessage = responseMessage.toString();

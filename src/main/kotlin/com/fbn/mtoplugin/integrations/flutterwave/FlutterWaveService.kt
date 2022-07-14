@@ -38,7 +38,7 @@ class FlutterWaveService(private val apiCaller: ApiCaller,
         val request: String = reqPayload.toString()
         val resp = this.apiCaller.getFlutterwaveCall("${fAppleConfig["baseurl"]}/api/v1/payment/validate", tokenHeader, request)
         var testModel = Gson().fromJson(resp, FlutterWaveResponsePickUp::class.java)
-        if (testModel.responseCode != "10000") throw FlutterWaveTransactionNotFound("unable to find transaction")
+        //if (testModel.responseCode != "00") throw FlutterWaveTransactionNotFound("unable to find transaction")
         val result = testModel.apply { status = "READY"; transactionRef = transRef }
         return result.toTransaction("FLWV");
     }

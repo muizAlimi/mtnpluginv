@@ -17,11 +17,14 @@ import org.springframework.stereotype.Service
 @Service
 class ThunesService(private val apiCaller: ApiCaller) {
 
-    @Value("\${thunes.dev.baseurl}")
+    //@Value("\${thunes.dev.baseurl}")
+    @Value("\${thunes.prod.baseurl}")
     private val THUNES_BASE_URL : String? = null
-    @Value("\${thunes.dev.username}")
+    //@Value("\${thunes.dev.username}")
+    @Value("\${thunes.prod.username}")
     private val THUNES_USERNAME : String? = null
-    @Value("\${thunes.dev.password}")
+    //@Value("\${thunes.dev.password}")
+    @Value("\${thunes.prod.password}")
     private val THUNES_PASSWORD : String? = null
 
 
