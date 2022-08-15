@@ -9,6 +9,8 @@ data class ApiRequest(
     @JsonProperty("AccessUsername") val accessUsername : String,
     @JsonProperty("AccessPassword") val accessPassword : String,
     @JsonProperty("AccessHashData") val accessHashData : String,
-    @JsonProperty("SpaTransactionFind") val spaTransactionFind : SpaTransactionFind
+    //@JsonProperty("SpaTransactionFind") val spaTransactionFind : SpaTransactionFind
+    @JsonProperty("Mtn") val mtn : String?,
+    @JsonProperty("LocationCode") val locationCode : String?
 )
 

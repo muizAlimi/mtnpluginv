@@ -392,14 +392,17 @@ class ApiCallerImpl : ApiCaller {
         headers.contentType = MediaType.APPLICATION_JSON
         headers.accept = listOf(MediaType.APPLICATION_JSON)
         val entity = HttpEntity<Any>(request, headers)
+        val uriBuilder = UriComponentsBuilder.fromUriString(uri).build();
         println("uri: $uri")
+        logger.info("uri: ${uriBuilder.toUriString()}")
         println("request: $request")
         headers.forEach {
             println("${it.key}: ${it.value}")
         }
         logger.info("headers: $headers")
         return try {
-            val resp = this.restTemplate.exchange(uri, HttpMethod.POST, entity, String::class.java)
+            val resp = this.restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.POST, entity, String::class.java)
+            //val resp = restTemplate.postForObject(uri, entity, String::class.java)
             println("response: $resp")
             println(resp.body)
             resp.body

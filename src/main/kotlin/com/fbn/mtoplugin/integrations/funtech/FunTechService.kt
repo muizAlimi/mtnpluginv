@@ -1,5 +1,6 @@
 package com.fbn.mtoplugin.integrations.funtech
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fbn.mtoplugin.exceptions.FuntechTransactionNotFound
 import com.fbn.mtoplugin.extensions.toPayResponse
 import com.fbn.mtoplugin.extensions.toTransaction
@@ -11,12 +12,11 @@ import com.fbn.mtoplugin.response.funtech.FuntechPaymentResponse
 import com.fbn.mtoplugin.response.funtech.FuntechResponsePickUp
 import com.fbn.mtoplugin.util.ApiCaller
 import com.fbn.mtoplugin.util.ConfigUtil
+import com.fbn.mtoplugin.util.EncodeUtil
 import com.google.gson.Gson
-import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fbn.mtoplugin.util.EncodeUtil
+import java.util.*
 
 @Service
 class FunTechService(private val apiCaller: ApiCaller,
@@ -31,9 +31,12 @@ class FunTechService(private val apiCaller: ApiCaller,
         val concatVal: String = "${fAppleConfig["accesshashdata"]}" + transRef
         val hashData: String = encodeUtil.encodeSha512(concatVal)
         val spTran = SpaTransactionFind(transRef,"FBN333023")
+        val rnd = Random()
+        val number: Int = rnd.nextInt(999999)
+        val locationCode: String = "FBN" + String.format("%06d", number);
         val funtechRequest = ApiRequest("${fAppleConfig["accessaffiliatenumber"]}", "${fAppleConfig["accessservicenumber"]}",
         "${fAppleConfig["accessusername"]}","${fAppleConfig["accesspassword"]}",hashData,
-            spTran)
+            transRef,locationCode)
         val reqPayload = FunTechPickupRequest(funtechRequest)
         val userJson = mapper.writeValueAsString(reqPayload)
         println(userJson)
